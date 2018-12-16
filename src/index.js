@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App";
+import ScrollToTop from "./components/ScrollToTop";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
@@ -9,7 +10,9 @@ import { CookiesProvider } from "react-cookie";
 ReactDOM.render(
   <CookiesProvider>
     <BrowserRouter>
-      <App />
+      <ScrollToTop>
+        <App />
+      </ScrollToTop>
     </BrowserRouter>
   </CookiesProvider>,
   document.getElementById("root")

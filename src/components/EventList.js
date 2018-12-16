@@ -55,14 +55,17 @@ class Events extends Component {
     const rsvps = this.props.rsvps;
 
     return (
-      <div>
+      <div className="max-w-3xl">
         <div className={!rsvps.length > 0 ? "display-none" : ""}>
           <h3 className="inline-block mb-2 mr-1">My schedule</h3>
-          <span className="text-sm">
+          <span className="inline-block text-sm">
             <span className="italic">Not you? </span>
-            <a href="#" onClick={this.handleLogOut}>
+            <button
+              className="text-blue hover:text-blue-dark underline"
+              onClick={this.handleLogOut}
+            >
               Log out
-            </a>
+            </button>
           </span>
           <ul className="list-reset flex flex-wrap -mx-4 mb-8">
             {rsvps.map(rsvp => (

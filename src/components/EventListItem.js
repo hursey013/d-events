@@ -7,8 +7,9 @@ class EventListItem extends Component {
     const event = this.props.event;
     const rsvp = this.props.rsvp;
     const buttonClass = rsvp
-      ? "w-1/2 p-2 border-4 border-green text-green font-semibold"
-      : "w-1/2 p-2 group-hover:bg-red-dark bg-red text-grey-lightest";
+      ? "border-4 border-green text-green font-semibold"
+      : "group-hover:bg-red-dark bg-red text-grey-lightest";
+
     return (
       <li className="flex w-full sm:w-1/2 xl:w-1/3 mb-8 px-4">
         <Link
@@ -38,7 +39,7 @@ class EventListItem extends Component {
             {event.location_name ? `${event.location_name} in ` : ""}
             {event.city}, {event.city}
           </p>
-          <button className={buttonClass}>
+          <button className={`w-1/2 p-2 ${buttonClass}`}>
             {rsvp ? "I'm attending!" : "RSVP"}
           </button>
         </Link>

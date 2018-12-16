@@ -36,10 +36,10 @@ class Filter extends Component {
     const locations = this.state.locations;
 
     return (
-      <div className="inline-block relative w-64">
+      <div className="inline-block relative w-full">
         <select
           onChange={e => this.update({ filter: e.target.value })}
-          className="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          className="block appearance-none w-full bg-white border border-grey-lighter hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
         >
           <option value="">View all</option>
           {locations.map(location => (

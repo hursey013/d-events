@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { formatDate } from "./helpers";
 import Rsvp from "./Rsvp";
+import Thanks from "./Thanks";
 
 class Event extends Component {
   constructor(props) {
@@ -26,11 +27,12 @@ class Event extends Component {
 
     const eventId = this.state.event.id;
     const data = new FormData(event.target);
+
     data.append("event_id", eventId);
 
     this.postApi(data)
       .then(res => {
-        this.setCookies(eventId);
+        this.setCookies();
       })
       .catch(err => console.log(err));
   }
@@ -61,7 +63,7 @@ class Event extends Component {
     return body;
   };
 
-  setCookies = eventId => {
+  setCookies = () => {
     const cookies = this.props.cookies;
     const prevCookieJson = cookies.get("rsvps", { doNotParse: true });
     const prevCookie = prevCookieJson ? JSON.parse(prevCookieJson) : [];
@@ -80,22 +82,17 @@ class Event extends Component {
     const tz = event.timezone;
 
     return (
-      <div>
-        <div className="flex -mx-4 mb-8">
-          <div className="w-full lg:w-1/2 p-4 mx-4 bg-white border rounded shadow">
+      <div className="max-w-3xl">
+        <div className="flex flex-wrap -mx-4">
+          <div className="w-full lg:w-1/2 p-4 mb-8 bg-white border rounded shadow">
             <h3 className="font-semibold mb-4">{event.name}</h3>
             <p className="mb-4">{event.description}</p>
-            <h4 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-              When
-            </h4>
+            <h4 className="label mb-2">When</h4>
             <p className="mb-4">
               {formatDate(event.start_date, tz)} -{" "}
               {formatDate(event.end_date, tz)}
             </p>
-            <h4 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-              Where
-            </h4>
-
+            <h4 className="label mb-2">Where</h4>
             <p className="mb-4">
               {event.location_name}
               <br />
@@ -116,12 +113,12 @@ class Event extends Component {
           {!rsvps.find(rsvp => event.id === rsvp.id) ? (
             <Rsvp eventId={event.id} handleSubmit={this.handleSubmit} />
           ) : (
-            "Thank you!"
+            <Thanks />
           )}
         </div>
         <Link
           to="/"
-          className="px-4 py-2 inline-flex items-center hover:bg-blue-dark bg-blue text-grey-lightest no-underline"
+          className="inline-flex items-center lg:-mx-4 text-blue-dark hover:text-blue-darker"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

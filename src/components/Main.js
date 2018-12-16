@@ -15,7 +15,6 @@ class Main extends Component {
   }
 
   onUpdate(values) {
-    console.log(values);
     this.setState(values);
   }
 
@@ -26,8 +25,8 @@ class Main extends Component {
 
   render() {
     return (
-      <main className="w-full lg:w-3/4 p-8 lg:p-12 xl:max-w-2xl lg:flex-auto lg:overflow-auto">
-        <h2 className="mb-4 font-normal leading-none">Upcoming events</h2>
+      <main className="w-full lg:w-3/4 p-8 lg:p-12 lg:flex-auto lg:overflow-auto">
+        <h2 className="mb-4 font-normal">Upcoming events</h2>
         <Switch>
           <Route
             exact

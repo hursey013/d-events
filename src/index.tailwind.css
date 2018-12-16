@@ -30,6 +30,14 @@ body {
     "Helvetica Neue";
 }
 
+.input {
+  @apply appearance-none block w-full bg-white text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight border rounded shadow;
+}
+
+.label {
+  @apply block uppercase tracking-wide text-grey-darker text-xs font-bold;
+}
+
 .subpixel-antialiased {
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: subpixel-antialiased;

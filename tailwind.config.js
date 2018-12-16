@@ -55,29 +55,15 @@ let colors = {
   "grey-lightest": "#f8fafc",
   white: "#ffffff",
 
-  "red-darkest": "#3b0d0c",
-  "red-darker": "#621b18",
   "red-dark": "#cc1f1a",
   red: "#e3342f",
-  "red-light": "#ef5753",
-  "red-lighter": "#f9acaa",
-  "red-lightest": "#fcebea",
 
-  "green-darkest": "#0f2f21",
-  "green-darker": "#1a4731",
-  "green-dark": "#1f9d55",
   green: "#38c172",
-  "green-light": "#51d88a",
-  "green-lighter": "#a2f5bf",
-  "green-lightest": "#e3fcec",
 
   "blue-darkest": "#12283a",
   "blue-darker": "#1c3d5a",
   "blue-dark": "#2779bd",
-  blue: "#3490dc",
-  "blue-light": "#6cb2eb",
-  "blue-lighter": "#bcdefa",
-  "blue-lightest": "#eff8ff"
+  blue: "#3490dc"
 };
 
 module.exports = {

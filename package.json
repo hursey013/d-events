@@ -1,6 +1,6 @@
 {
-  "name": "events",
-  "version": "0.1.0",
+  "name": "d-events",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "react": "^16.6.3",
@@ -10,13 +10,12 @@
     "react-scripts": "2.1.1"
   },
   "scripts": {
-    "prestart": "npm run tailwind",
+    "prestart": "./node_modules/.bin/tailwind build ./src/index.tailwind.css -c ./tailwind.config.js -o ./src/index.css",
     "start": "react-scripts start",
-    "prebuild": "npm run tailwind",
+    "prebuild": "./node_modules/.bin/tailwind build ./src/index.tailwind.css -c ./tailwind.config.js -o ./src/index.css",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "tailwind": "tailwind build ./src/index.tailwind.css -c ./tailwind.config.js -o ./src/index.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

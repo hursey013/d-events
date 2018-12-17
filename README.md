@@ -1,109 +1,109 @@
-# What to do
+# Requirements
 
-- Install Virtualbox and vagrant
-- `vagrant up`
-- `vagrant ssh`
-- In your home folder find data.db, a sqlite3 database loaded with records. sqlite3 is already installed on the Vagrant box.
-- Write a backend service for the specified api using Python
-- If you don't want to use Python, that's fine, just install whatever language (and framework) you need in the Vagrant image and send it back. If you aren't using Python, please be clear about how we should start the service and flag any dependency issues we may run into.
-- Write a frontend service that consumes that api and provides a UI for the user
+- python
+- pip
+- nodejs
+- npm
 
-## Task
-Today we're building a simple events website. We've been provided data for a bunch of events which include location data.
+# Launching the app
 
-For your project, please build a simple data access API wrapping the SQLite data with the following endpoints:
+- Extract project zip file and navigate to the folder in your terminal
+- To install all of the project's dependencies (including the requirements listed above), run:
 
-## Common API Endpoints
-We need endpoints to:
-
-- List out all events (there could be thousands)
-- Give details on a specific event
-- Attend/RSVP to an event
-
-You can choose what the endpoint(s) look like and what data they return but make sure that we can accomplish all the above tasks. Just make sure the endpoints return json.
-
-After that plase choose *one* of the following options to implement:
-
-### Option 1: Frontend
-We'd like to build an interface to allow users to view and edit the data. We need both a backend that has endpoints that take in parameters and returns json data, and a frontend interface which consumes the data and displays it.
-
-At minimum, this frontend should be capable of the following:
-
-- Render the list of events in chronological order, displaying whatever details you deem necessary for each event
-- Allow a user to view more details about each event, including ticket tiers, event description, etc. You can display the details on the same page, or create a second "event details" page.
-- Allow a user to mark an event as "attending" — if a user has marked an event as "attending," this state should be reflected in the list of events, as well as on the event details page.
-
-### Option 2: Event Search Service
-Events are more interesting if they're geographically or topically relevant. Please build a simple data wrapper that uses geography, naming, or some other signal to allow discovery of events via search rather than browsing. (This doesn't mean you have to use complex search indexing or machine learning; any plausible lookup method(s) is okay.)
-
-You may decide to modify the data model to track attendee history or provide additional useful lookup keys, and should add an API endpoint to fetch recommendations based on your search criteria (location, keyword, attendee email, etc.).
-
-## General notes
-
-* Include any assumptions you are making about the requirements for the project in your code comments.
-* If you build a frontend, please make sure the project works in the latest versions of Chrome, Firefox, Safari and Internet Explorer. No need to support anything older than that.
-* If you use a JS module loader or CSS precompiler, please do make sure to include the unminified version of your source when you submit the test.
-* Don't worry too much about how it looks...but don't worry too little!
-* For the search service, please explain any changes you make to the data model and the search criteria you implemented in your API.
-
-## To Submit
-Once you have your code working, zip up the directory and submit it along with:
-
-* Instructions on how to start the server (or service)
-* How to test it (i.e. what hostname/URL do we visit, what automated tests exist, etc.)
-
-We may test this with a much larger dataset than what we provided here, so if you've modified the data model please provide a reasonable loading script, migration, or other mechanism to adapt input in the same format as our sample to your new schema.
-
-## Data
-We have 2 tables, Events and Locations (each event has a single location)
-
-Events look like:
-Events:
 ```
-    id (Integer)
-    status (String)
-    start_date (DateTime)
-    end_date (DateTime)
-    description (String)
-    official (Boolean)
-    visibility (String)
-    guests_can_invite_others (Boolean)
-    modified_date (DateTime)
-    created_date (DateTime)
-    participant_count (Numeric)
-    reason_for_private (String)
-    order_email_template (String)
-    name (String)
-    locations = (Location)
+vagrant up
 ```
 
-Locations:
-```
-    id (Integer)
-    event_id (Integer, links to parent event's id)
+- Upon completion, enter the server by running:
 
-    address_type (String)
-    contact_phone (String)
-    primary (Boolean)
-    contact_email (String)
-    contact_family_name (String)
-    contact_given_name (String)
-    host_given_name (String)
-    timezone (String)
-    city (String)
-    locality (String)
-    state (String)
-    address_type (String)
-    latitude (String)
-    longitude (String)
-    accuracy (String)
-    address1 (String)
-    address2 (String)
-    postal_code (String)
-    country (String)
-    modified_date (DateTime)
-    created_date (DateTime)
-    number_spaces_remaining (Numeric)
-    spaces_remaining (Boolean)
-    name (String)
 ```
+vagrant ssh
+```
+
+- This will put you in the `/vagrant` folder
+
+## Initialize database
+
+- We need to add a new `RSVP` database table. To do so, run the following commands:
+
+```
+cd api
+```
+
+```
+python
+```
+
+```
+>>> from api import db
+>>> db.create_all()
+```
+
+- `Ctrl+D` to exit python.
+
+## Starting the servers
+
+### API
+
+- Still within the `/vagrant/api` folder, run:
+
+```
+python api.py
+```
+
+- This will launch the python/flask API at `http://localhost:5000`
+
+### Frontend
+
+- In a new terminal window, run the following in the local project folder to launch another ssh session into Vagrant:
+
+```
+vagrant ssh
+```
+
+- Finally start the React development server by running this command in the `/vagrant` folder:
+
+```
+npm start
+```
+
+- This will launch the frontend at `http://localhost:3000`
+
+_Leave both terminal windows open and running while using the application._
+
+# About the app
+
+The events app consists of a Flask API that allows various endpoints to interact with the provided sqlite database. The json responses provided by the API are then displayed on the frontend using React.
+
+## Notable features
+
+- Browse all events on the app's homepage, filterable by state
+- View detailed information about any event
+- RSVP to an event, which populates your contact information into the database
+- View a saved state of events that you are attending on the app's homepage
+
+## Next steps
+
+Given the limited amount of time, there are a number of areas that I would improve upon.
+
+### API
+
+- Since at this point the `event` and `location` tables in the database were only being read and not modified, I did not create models for them. Ideally there would be a model defined for each to allow more operations to be preformed on them.
+- Better support for large amount of database records. Right now I'm simply putting a `LIMIT` on the endpoint to return all events, but ideally it would support returning records in conjunction with pagination.
+- Limit results to only future events. All of the sample events were backdated, but to limit the amount of events return I would likely set this to only show future events.
+- Better error handling, validation, and data sanitization
+- Tests
+
+### Frontend
+
+_Similarly..._
+
+- Better error handling, validation, and data sanitization
+- Tests
+
+And also:
+
+- Path to account creation. Right now I'm setting a cookie to save the state of event's that a user has RSVP'ed to, which works as a first step, but ideally a user would have the option to create an account so that they could log in again in the future, after the cookie has been cleared/expired.
+- Better search/filtering capabilities
+- Pagination for large amounts of records
+- Reduce size of stylesheets - there are a lot of unused classes, so with time those could be pared down to a production size.

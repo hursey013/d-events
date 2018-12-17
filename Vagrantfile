@@ -45,6 +45,23 @@ sudo apt-get update
 sudo apt-get install -y python-software-properties software-properties-common apt-transport-https
 sudo apt-get update
 sudo apt-get install -y sqlite3
+
+### install script customizations
+
+# install node/npm
+cd ~
+curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt-get install -y nodejs
+
+# install pip
+sudo apt-get install -y python-pip
+pip install --upgrade pip
+
 cd /vagrant
+
+# install project dependencies
+pip install -r requirements.txt
+npm install
 
 SCRIPT

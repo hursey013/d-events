@@ -13,14 +13,7 @@ class Event extends Component {
       event: {}
     };
 
-    this.update = this.update.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  update(value) {
-    this.props.onUpdate({
-      ...value
-    });
   }
 
   handleSubmit(event) {
@@ -31,7 +24,11 @@ class Event extends Component {
 
     data.append("event_id", eventId);
 
-    this.postApi(data)
+    fetch("/api/v1/events/rsvp", {
+      method: "POST",
+      body: data
+    })
+      .then(res => res.json())
       .then(res => {
         this.setCookies();
       })
@@ -39,30 +36,16 @@ class Event extends Component {
   }
 
   componentDidMount() {
-    this.getApi()
+    const id = parseInt(this.props.match.params.id, 10);
+
+    fetch(`/api/v1/events?id=${id}`)
+      .then(res => res.json())
       .then(res => {
-        this.setState({ event: res });
+        this.setState({ event: res[0] });
         document.title = `D Events | ${this.state.event.name}`;
       })
       .catch(err => console.log(err));
   }
-
-  getApi = async () => {
-    const id = parseInt(this.props.match.params.id, 10);
-    const res = await fetch(`/api/v1/events?id=${id}`);
-    const body = await res.json();
-    if (res.status !== 200) throw Error(body.message);
-    return body[0];
-  };
-
-  postApi = async data => {
-    const res = await fetch("/api/v1/events/rsvp", {
-      method: "POST",
-      body: data
-    });
-    const body = await res.json();
-    return body;
-  };
 
   setCookies = () => {
     const cookies = this.props.cookies;
@@ -71,7 +54,7 @@ class Event extends Component {
     prevCookie.push(this.state.event);
     const nextCookie = JSON.stringify(prevCookie);
     cookies.set("rsvps", nextCookie, { path: "/" });
-    this.update({ rsvps: prevCookie });
+    this.props.onUpdate({ rsvps: prevCookie });
   };
 
   render() {

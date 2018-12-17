@@ -8,29 +8,14 @@ class Filter extends Component {
     this.state = {
       locations: []
     };
-
-    this.update = this.update.bind(this);
-  }
-
-  update(value) {
-    this.props.onUpdate({
-      ...value
-    });
   }
 
   componentDidMount() {
-    this.getApi()
-      .then(res => this.setState({ locations: res }))
+    fetch("/api/v1/events/states")
+      .then(res => res.json())
+      .then(locations => this.setState({ locations }))
       .catch(err => console.log(err));
   }
-
-  getApi = async () => {
-    const url = "/api/v1/events/states";
-    const res = await fetch(url);
-    const body = await res.json();
-    if (res.status !== 200) throw Error(body.message);
-    return body;
-  };
 
   render() {
     const locations = this.state.locations;
@@ -38,7 +23,7 @@ class Filter extends Component {
     return (
       <div className="inline-block relative w-full">
         <select
-          onChange={e => this.update({ filter: e.target.value })}
+          onChange={e => this.props.onUpdate({ filter: e.target.value })}
           className="block appearance-none w-full bg-white border border-grey-lighter hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
         >
           <option value="">View all</option>

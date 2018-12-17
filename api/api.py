@@ -28,11 +28,18 @@ class Rsvp(db.Model):
         self.postal_code = postal_code
 
 
+# return items from the database as dictionaries
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+
+
+def get_cursor():
+    conn = sqlite3.connect('data.db')
+    conn.row_factory = dict_factory
+    return conn.cursor()
 
 
 @app.errorhandler(404)
@@ -41,8 +48,6 @@ def not_found(error):
 
 
 # endpoint to add new rsvps
-
-
 @app.route('/api/v1/events/rsvp', methods=['POST'])
 def add_rsvp():
     event_id = request.form['event_id']
@@ -63,69 +68,105 @@ def add_rsvp():
 
 
 # endpoint to list all events, optionally filtered by location
-
-
 @app.route('/api/v1/events/all', methods=['GET'])
 def events():
-    query_parameters = request.args
+    location = request.args.get('location')
 
-    location = query_parameters.get('location')
+    query = '''
+        SELECT
+            events.id,
+            events.name,
+            locations.name AS location_name,
+            locations.city,
+            locations.state,
+            events.start_date,
+            locations.timezone
+        FROM
+            events
+        INNER JOIN
+            locations
+        ON
+            events.id=locations.event_id
+        AND
+            events.status='confirmed'
+        AND
+            events.visibility='public'
+        '''
 
-    query = "SELECT events.id, events.name, locations.name AS location_name, locations.city, locations.state, events.start_date, locations.timezone FROM events INNER JOIN locations ON events.id=locations.event_id AND events.status='confirmed' AND events.visibility='public'"
-    to_filter = []
+    filter = []
 
     if location:
         query += ' WHERE locations.state=(?)'
-        to_filter.append(location)
+        filter.append(location)
 
     query += ' ORDER BY events.start_date LIMIT 50;'
 
-    conn = sqlite3.connect('data.db')
-    conn.row_factory = dict_factory
-    cur = conn.cursor()
-    results = cur.execute(query, to_filter).fetchall()
+    cur = get_cursor()
+    results = cur.execute(query, filter).fetchall()
 
     return jsonify(results)
 
 
 # endpoint for distinct list of event locations
-
-
 @app.route('/api/v1/events/states', methods=['GET'])
 def events_states():
-    conn = sqlite3.connect('data.db')
-    conn.row_factory = dict_factory
-    cur = conn.cursor()
-    results = cur.execute(
-        "SELECT DISTINCT locations.state FROM locations INNER JOIN events ON locations.event_id=events.id AND events.status='confirmed' AND events.visibility='public' ORDER BY locations.state;").fetchall()
+    query = '''
+        SELECT DISTINCT
+            locations.state
+        FROM
+            locations
+        INNER JOIN
+            events
+        ON
+            locations.event_id=events.id
+        AND
+            events.status='confirmed'
+        AND
+            events.visibility='public'
+        ORDER BY
+            locations.state
+    '''
+
+    cur = get_cursor()
+    results = cur.execute(query).fetchall()
 
     return jsonify(results)
 
 
-# endpoint for event details, filtered by query param
-
-
+# endpoint for event details
 @app.route('/api/v1/events', methods=['GET'])
 def events_filter():
-    query_parameters = request.args
+    id = request.args.get('id')
 
-    id = query_parameters.get('id')
-
-    query = 'SELECT events.id, events.name, events.description, locations.name AS location_name, locations.address1, locations.address2, locations.city, locations.state, locations.postal_code, events.start_date, events.end_date, locations.timezone FROM events LEFT JOIN locations ON events.id=locations.event_id WHERE'
-    to_filter = []
-
-    if id:
-        query += ' events.id=(?) AND'
-        to_filter.append(id)
-    if not (id):
+    if not id:
         return abort(404)
 
-    query = query[:-4] + ';'
+    query = '''
+        SELECT
+            events.id,
+            events.name,
+            events.description,
+            locations.name AS location_name,
+            locations.address1,
+            locations.address2,
+            locations.city,
+            locations.state,
+            locations.postal_code,
+            events.start_date,
+            events.end_date,
+            locations.timezone
+        FROM
+            events
+        LEFT JOIN
+            locations
+        ON
+            events.id=locations.event_id
+        WHERE
+            events.id=(?)
+    '''
 
-    conn = sqlite3.connect('data.db')
-    conn.row_factory = dict_factory
-    cur = conn.cursor()
-    results = cur.execute(query, to_filter).fetchall()
+    cur = get_cursor()
+    results = cur.execute(query, [id]).fetchall()
 
     return jsonify(results)
 

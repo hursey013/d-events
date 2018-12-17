@@ -9,7 +9,6 @@ class Events extends Component {
       events: []
     };
 
-    this.update = this.update.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
   }
 
@@ -39,15 +38,9 @@ class Events extends Component {
     return body;
   };
 
-  update(value) {
-    this.props.onUpdate({
-      ...value
-    });
-  }
-
   handleLogOut() {
     this.props.cookies.remove("rsvps", { path: "/" });
-    this.update({ rsvps: [] });
+    this.props.onUpdate({ rsvps: [] });
   }
 
   render() {

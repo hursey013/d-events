@@ -56,12 +56,11 @@ sudo apt-get install -y nodejs
 
 # install pip
 sudo apt-get install -y python-pip
-pip install --upgrade pip
 
 cd /vagrant
 
 # install project dependencies
-pip install -r requirements.txt
+pip install --user -r requirements.txt
 npm install
 
 SCRIPT

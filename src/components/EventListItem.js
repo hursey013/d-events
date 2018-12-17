@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { formatDate } from "./helpers";
+import Moment from "react-moment";
+import "moment-timezone";
 
 class EventListItem extends Component {
   render() {
@@ -33,7 +34,9 @@ class EventListItem extends Component {
                 <line x1="8" y1="2" x2="8" y2="6" />
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
-              {formatDate(event.start_date, event.timezone)}
+              <Moment tz={event.timezone} format="M/D/YYYY h:mm z">
+                {event.start_date}
+              </Moment>
             </span>
             <strong>Join us: </strong>
             {event.location_name ? `${event.location_name} in ` : ""}

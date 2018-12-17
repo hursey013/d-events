@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { formatDate } from "./helpers";
+import Moment from "react-moment";
+import "moment-timezone";
 import Rsvp from "./Rsvp";
 import Thanks from "./Thanks";
 
@@ -89,8 +90,13 @@ class Event extends Component {
             <p className="mb-4">{event.description}</p>
             <h4 className="label mb-2">When</h4>
             <p className="mb-4">
-              {formatDate(event.start_date, tz)} -{" "}
-              {formatDate(event.end_date, tz)}
+              <Moment tz={tz} format="M/D/YYYY h:mm z">
+                {event.start_date}
+              </Moment>{" "}
+              -{" "}
+              <Moment tz={tz} format="M/D/YYYY h:mm z">
+                {event.end_date}
+              </Moment>
             </p>
             <h4 className="label mb-2">Where</h4>
             <p className="mb-4">

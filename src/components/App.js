@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withCookies } from "react-cookie";
+import { withRouter } from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 
@@ -15,7 +16,9 @@ class App extends Component {
   }
 
   onUpdate(values) {
-    this.setState(values);
+    this.setState(values, () => {
+      if (this.props.location.pathname !== "/") this.props.history.push("/");
+    });
   }
 
   render() {
@@ -28,4 +31,4 @@ class App extends Component {
   }
 }
 
-export default withCookies(App);
+export default withCookies(withRouter(App));

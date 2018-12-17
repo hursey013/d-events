@@ -4,8 +4,6 @@ import Filter from "./Filter";
 
 class Header extends Component {
   render() {
-    const homepage = this.props.location.pathname === "/";
-
     return (
       <header className="bg-image bg-bottom bg-center bg-no-repeat bg-cover bg-blue-darker text-grey-lightest w-full lg:w-1/4 p-8 lg:p-12 lg:flex-none">
         <div className="lg:max-w-sm">
@@ -24,7 +22,7 @@ class Header extends Component {
             Every door knock, phone call, and text counts. Find an event near
             you to help get out the vote.
           </p>
-          <div className={`mb-12 ${!homepage ? "display-none" : ""}`}>
+          <div className="mb-12">
             <span className="block mb-2 text-sm uppercase">
               Find an event in your community
             </span>

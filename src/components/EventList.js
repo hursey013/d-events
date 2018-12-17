@@ -14,8 +14,7 @@ class Events extends Component {
 
   componentDidMount() {
     document.title = "D Events | Upcoming events";
-
-    this.getApi()
+    this.getApi(this.props.filter)
       .then(res => this.setState({ events: res }))
       .catch(err => console.log(err));
   }
